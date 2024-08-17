@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export async function middlewareCheckOrigin(
   req: Request,
@@ -6,11 +6,10 @@ export async function middlewareCheckOrigin(
   next: NextFunction,
 ) {
   const origin = req.headers.host;
-  console.log("origin: ", origin);
+  console.log("origin name: ", origin);
 
-  if (origin === "localhost:3000") {
-    next();
+  if (origin === "103.52.114.161:3000") {
+    return next();
   }
-
-  res.status(403).json({ message: "You are not allowed" });
+  res.status(403).json({ message: "You are not allowed", origin });
 }
