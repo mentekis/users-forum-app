@@ -11,6 +11,6 @@ connectDb();
 app.use(express.json());
 app.use("/api/v1/users", userRouter);
 
-app.listen(process.env.PORT_USERS, () => {
-  console.log(`App listening on port ${process.env.PORT_USERS}`);
+app.listen(process.env.PORT, () => {
+  console.log(`App listening on port ${process.env.PORT}`);
 });
