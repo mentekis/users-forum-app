@@ -1,5 +1,6 @@
 import UserRepository from "../repositories/user.repository";
 import { IUser } from "../entities/user.entity";
+import { newUserCreated, sendUserData } from "../utils/rabbitmq/user.rabbitmq";
 
 const UserService = {
   getAllUsers: async () => {
@@ -13,6 +14,10 @@ const UserService = {
   getUser: async (id: string) => {
     try {
       const user = await UserRepository.getUser(id);
+
+      // sendToQueue
+      sendUserData(id);
+
       return user;
     } catch (error) {
       console.log(`Service Error: ${error}`);
@@ -26,6 +31,10 @@ const UserService = {
         return "Name is required";
       }
       const newUser = await UserRepository.createUser(user);
+
+      // sendToQueue
+      newUserCreated(user);
+
       return newUser;
     } catch (error) {
       console.log(`Service Error: ${error}`);
