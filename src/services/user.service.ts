@@ -1,6 +1,5 @@
 import UserRepository from "../repositories/user.repository";
 import { IUser } from "../entities/user.entity";
-import { newUserCreated, sendUserData } from "../utils/rabbitmq/user.rabbitmq";
 
 const UserService = {
   getAllUsers: async () => {
@@ -8,19 +7,15 @@ const UserService = {
       const users = await UserRepository.getAllUsers();
       return users;
     } catch (error) {
-      console.log(`Service Error: ${error}`);
+      console.log(`Service [getAllUsers] Error: ${error}`);
     }
   },
   getUser: async (id: string) => {
     try {
       const user = await UserRepository.getUser(id);
-
-      // sendToQueue
-      sendUserData(id);
-
       return user;
     } catch (error) {
-      console.log(`Service Error: ${error}`);
+      console.log(`Service [getUser] Error: ${error}`);
     }
   },
   createUser: async (user: IUser) => {
@@ -32,12 +27,9 @@ const UserService = {
       }
       const newUser = await UserRepository.createUser(user);
 
-      // sendToQueue
-      newUserCreated(user);
-
       return newUser;
     } catch (error) {
-      console.log(`Service Error: ${error}`);
+      console.log(`Service [createUser] Error: ${error}`);
     }
   },
   updateUser: async (id: string, user: IUser) => {
@@ -45,14 +37,14 @@ const UserService = {
       const updated = await UserRepository.updateUser(id, user);
       return updated;
     } catch (error) {
-      console.log(`Service Error: ${error}`);
+      console.log(`Service [updateUser] Error: ${error}`);
     }
   },
   deleteUser: async (id: string) => {
     try {
       await UserRepository.deleteUser(id);
     } catch (error) {
-      console.log(`Service Error: ${error}`);
+      console.log(`Service [deleteUser] Error: ${error}`);
     }
   },
 };
