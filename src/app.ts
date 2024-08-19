@@ -1,16 +1,16 @@
 import express from "express";
-import dotenv from "dotenv";
+import { env } from "./utils/envalid/env";
 import { userRouter } from "./routes/user.route";
 import { connectDb } from "./utils/db-connect/db.connect";
-
-dotenv.config();
+import { newUserSuggestion } from "./utils/rabbitmq/user.rabbitmq";
 
 const app = express();
 connectDb();
 
 app.use(express.json());
 app.use("/api/v1/users", userRouter);
+newUserSuggestion();
 
-app.listen(process.env.PORT, () => {
-  console.log(`App listening on port ${process.env.PORT}`);
+app.listen(env.PORT, () => {
+  console.log(`App listening on port ${env.PORT}`);
 });
