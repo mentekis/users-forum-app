@@ -11,8 +11,8 @@ const UserController = {
   // Create a user
   handleCreateUser: async (req: Request, res: Response) => {
     const { name, city } = req.body; // Get body content
-    await UserService.createUser({ name, city });
-    if (typeof name === "string") {
+    const data = await UserService.createUser({ name, city });
+    if (typeof data === "string") {
       return res.status(400).json({ message: "Name is required" });
     }
 
