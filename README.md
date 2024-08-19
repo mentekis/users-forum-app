@@ -6,9 +6,9 @@ A part of Forum App microservices
 
 ### Producer queue:
 
-- New user notification: `"new.user.created"`
-- Send user data: `"get.user"`
+- Notifications: `"newUserCreated"`
+- User data: `"getUserData"`
 
 ### Consumer queue:
 
-- `"new.user.created"`
+- `"newUserCreated"`
