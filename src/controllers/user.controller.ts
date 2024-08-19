@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserService from "../services/user.service";
+import { newUserCreated, rabbitConnect } from "../utils/rabbitmq/user.rabbitmq";
 
 const UserController = {
   // Get all users
@@ -8,13 +9,22 @@ const UserController = {
     return res.status(200).json({ message: "List of Users", data: users });
   },
 
+  handleGetUser: async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const user = await UserService.getUser(id);
+    return res.status(200).json({ message: "User found", data: user });
+  },
+
   // Create a user
   handleCreateUser: async (req: Request, res: Response) => {
     const { name, city } = req.body; // Get body content
-    await UserService.createUser({ name, city });
-    if (typeof name === "string") {
+    const data = await UserService.createUser({ name, city });
+    if (typeof data === "string") {
       return res.status(400).json({ message: "Name is required" });
     }
+
+    // sendToQueue
+    newUserCreated({ name, city });
 
     return res
       .status(201)

@@ -1,41 +1,56 @@
 import amqplib from "amqplib";
-import dotenv from "dotenv";
+import { env } from "../envalid/env";
 import { IUser } from "../../entities/user.entity";
 
-dotenv.config();
-
-const queue = process.env.QUEUE_NEW_USER as string;
-
 // Connection
-async function rabbitConnect() {
-  const connect = await amqplib.connect(process.env.RABBITMQ_URL as string);
-  const channel = await connect.createChannel();
-  channel.assertQueue(queue, { durable: true });
-  return channel;
+async function rabbitConnect(queue: string) {
+  try {
+    const connect = await amqplib.connect(env.RABBITMQ_URI);
+    const channel = await connect.createChannel();
+    await channel.assertQueue(queue, { durable: true });
+    return channel;
+  } catch (error) {
+    console.log("RabbitMQ [connection] error:", error);
+    throw error;
+  }
 }
 
 // Producer
-// 1. in createUser service
+// 1. in handleCreateUser Controller
 async function newUserCreated(data: IUser) {
-  const channel = await rabbitConnect();
-  channel.sendToQueue(queue, Buffer.from(JSON.stringify(data)));
+  try {
+    const channel = await rabbitConnect(env.QUEUE_NEW_USER);
+    channel.sendToQueue(env.QUEUE_NEW_USER, Buffer.from(JSON.stringify(data)));
+    console.log("New user sent to RabbitMQ: ", JSON.stringify(data));
+  } catch (error) {
+    console.log("RabbitMQ [newUserCreated] error:", error);
+    // handle error, retry or dead-letter
+  }
 }
 
-// 2. in getUser service
+// 2. in handleGetUser Controller
 async function sendUserData(id: string) {
-  const channel = await rabbitConnect();
-  channel.sendToQueue(process.env.QUEUE_GET_USER as string, Buffer.from(id));
+  const channel = await rabbitConnect(env.QUEUE_GET_USER);
+  channel.sendToQueue(env.QUEUE_GET_USER as string, Buffer.from(id));
 }
 
 // Consumer
 async function newUserSuggestion() {
-  const channel = await rabbitConnect();
-  await channel.consume(queue, (msg) => {
-    if (msg !== null) {
-      console.log("Received: ", msg.content.toString());
-      channel.ack(msg);
-    }
-  });
+  try {
+    const channel = await rabbitConnect(env.QUEUE_NEW_USER);
+    await channel.consume(
+      env.QUEUE_NEW_USER,
+      (msg) => {
+        if (msg !== null) {
+          console.log("New user data received: ", msg.content.toString());
+          channel.ack(msg);
+        }
+      },
+      { noAck: false },
+    );
+  } catch (error) {
+    console.log("RabbitMQ [user consume] error:", error);
+  }
 }
 
-export { newUserCreated, sendUserData, newUserSuggestion };
+export { rabbitConnect, newUserCreated, sendUserData, newUserSuggestion };
