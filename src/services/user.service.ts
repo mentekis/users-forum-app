@@ -1,5 +1,6 @@
 import UserRepository from "../repositories/user.repository";
 import { IUser } from "../entities/user.entity";
+import { userValidationSchema } from "../utils/zod/user.zod";
 
 const UserService = {
   getAllUsers: async () => {
@@ -21,10 +22,13 @@ const UserService = {
   createUser: async (user: IUser) => {
     try {
       // inputValidation
-      if (!user.name) {
-        console.log("Name is required");
-        return "Name is required";
+      const result = userValidationSchema.safeParse(user);
+      if (!result.success) {
+        // just return the issues
+        // detailed message will be mapped in controllers
+        return result.error.issues;
       }
+
       const newUser = await UserRepository.createUser(user);
 
       return newUser;

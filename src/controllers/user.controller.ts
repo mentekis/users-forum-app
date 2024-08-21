@@ -19,8 +19,10 @@ const UserController = {
   handleCreateUser: async (req: Request, res: Response) => {
     const { name, city } = req.body; // Get body content
     const data = await UserService.createUser({ name, city });
-    if (typeof data === "string") {
-      return res.status(400).json({ message: "Name is required" });
+
+    if (typeof data === "object") {
+      // All issues will be mapped in this part
+      return res.status(400).json({ message: data.map((e) => e.message) });
     }
 
     // sendToQueue
