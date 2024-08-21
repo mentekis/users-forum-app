@@ -14,5 +14,5 @@ export const userValidationSchema = z.object({
       invalid_type_error: "City must be a string",
     })
     .toUpperCase()
-    .min(1, "Name is required, fill it please"),
+    .min(1, "City is required, fill it please"),
 });

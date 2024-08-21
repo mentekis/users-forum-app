@@ -22,7 +22,7 @@ const UserController = {
 
     if (typeof data === "object") {
       // All issues will be mapped in this part
-      return res.status(400).json({ message: data.map((e) => e.message) });
+      return res.status(400).json({ message: data });
     }
 
     // sendToQueue
