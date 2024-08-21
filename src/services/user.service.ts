@@ -26,7 +26,7 @@ const UserService = {
       if (!result.success) {
         // just return the issues
         // detailed message will be mapped in controllers
-        return result.error.issues;
+        return result.error.issues.map((e) => e.message);
       }
 
       const newUser = await UserRepository.createUser(user);
