@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import UserService from "../services/user.service";
-import { newUserCreated, rabbitConnect } from "../utils/rabbitmq/user.rabbitmq";
 
 const UserController = {
   // Get all users
-  handleGetAllUsers: async (req: Request, res: Response) => {
+  handleGetAllUsers: async (_req: Request, res: Response) => {
     const users = await UserService.getAllUsers();
     return res.status(200).json({ message: "List of Users", data: users });
   },
@@ -13,24 +12,6 @@ const UserController = {
     const id = req.params.id;
     const user = await UserService.getUser(id);
     return res.status(200).json({ message: "User found", data: user });
-  },
-
-  // Create a user
-  handleCreateUser: async (req: Request, res: Response) => {
-    const { name, email, password } = req.body; // Get body content
-    const data = await UserService.createUser({ name, email, password });
-
-    if (typeof data === "object") {
-      // All issues will be mapped in this part
-      return res.status(400).json({ message: { name, email } });
-    }
-
-    // sendToQueue
-    newUserCreated({ name, email });
-
-    return res
-      .status(201)
-      .json({ message: "User created", data: { name, email } });
   },
 
   // Update a user

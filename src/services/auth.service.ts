@@ -95,6 +95,13 @@ const AuthService = {
       console.log(`userLoginService Error: ${error}`);
     }
   },
+  userLogout: async (refreshToken: string) => {
+    try {
+      await AuthRepository.deleteAuth(refreshToken);
+    } catch (error) {
+      console.log(`userLogoutService Error: ${error}`);
+    }
+  },
 };
 
 export default AuthService;
