@@ -1,5 +1,5 @@
 import UserRepository from "../repositories/user.repository";
-import { IUser } from "../entities/user.entity";
+import { IUserRegister } from "../models/entities/user.entity";
 import { userValidationSchema } from "../utils/zod/user.zod";
 
 const UserService = {
@@ -19,7 +19,7 @@ const UserService = {
       console.log(`Service [getUser] Error: ${error}`);
     }
   },
-  createUser: async (user: IUser) => {
+  createUser: async (user: IUserRegister) => {
     try {
       // inputValidation
       const result = userValidationSchema.safeParse(user);
@@ -36,7 +36,7 @@ const UserService = {
       console.log(`Service [createUser] Error: ${error}`);
     }
   },
-  updateUser: async (id: string, user: IUser) => {
+  updateUser: async (id: string, user: IUserRegister) => {
     try {
       const updated = await UserRepository.updateUser(id, user);
       return updated;

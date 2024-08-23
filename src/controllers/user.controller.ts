@@ -17,37 +17,37 @@ const UserController = {
 
   // Create a user
   handleCreateUser: async (req: Request, res: Response) => {
-    const { name, city } = req.body; // Get body content
-    const data = await UserService.createUser({ name, city });
+    const { name, email, password } = req.body; // Get body content
+    const data = await UserService.createUser({ name, email, password });
 
     if (typeof data === "object") {
       // All issues will be mapped in this part
-      return res.status(400).json({ message: data });
+      return res.status(400).json({ message: { name, email } });
     }
 
     // sendToQueue
-    newUserCreated({ name, city });
+    newUserCreated({ name, email });
 
     return res
       .status(201)
-      .json({ message: "User created", data: { name, city } });
+      .json({ message: "User created", data: { name, email } });
   },
 
   // Update a user
   handleUpdateUser: async (req: Request, res: Response) => {
     const userId = req.params.id;
     const userHeader = req.headers.authorization;
-    const { name, city } = req.body;
+    const { name, email, password } = req.body;
 
     // Check authorization
     if (!userHeader) {
       return res.status(401).json({ message: "Unauthorized. Invalid token" });
     }
-    await UserService.updateUser(userId, { name, city });
+    await UserService.updateUser(userId, { name, email, password });
 
     return res
       .status(200)
-      .json({ message: "User updated", data: { name, city } });
+      .json({ message: "User updated", data: { name, email } });
   },
 
   // Delete a user
