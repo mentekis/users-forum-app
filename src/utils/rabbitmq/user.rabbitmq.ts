@@ -1,6 +1,5 @@
 import amqplib from "amqplib";
 import { env } from "../envalid/env";
-import { IUser } from "../../entities/user.entity";
 
 // Connection
 async function rabbitConnect(queue: string) {
