@@ -6,7 +6,6 @@ export async function middlewareCheckOrigin(
   next: NextFunction,
 ) {
   const origin = req.headers.host;
-  console.log("origin name: ", origin);
 
   if (origin === "localhost:3000") {
     //if (origin === "103.52.114.161:3000") {
