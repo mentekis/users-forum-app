@@ -13,9 +13,12 @@ export default [
         {
           args: "all",
           argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_", // all variables that start with "_" will be ignored
+          varsIgnorePattern: "^_",
         },
       ],
+      "@typescript-eslint/no-require-imports": "error",
+      "@typescript-eslint/no-wrapper-object-types": "error",
+      "@typescript-eslint/prefer-as-const": "error",
     },
   },
   pluginJs.configs.recommended,

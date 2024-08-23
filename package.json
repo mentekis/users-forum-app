@@ -8,7 +8,8 @@
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "lint:run": "eslint ./src",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
+    "husky": "^9.1.5",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
