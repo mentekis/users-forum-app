@@ -1,5 +1,5 @@
 import { User } from "../models/user.schema";
-import { IUser } from "../entities/user.entity";
+import { IUserRegister } from "../models/entities/user.entity";
 
 const UserRepository = {
   getAllUsers: async () => {
@@ -18,7 +18,7 @@ const UserRepository = {
       console.log(`Repository Error: ${error}`);
     }
   },
-  createUser: async (user: IUser) => {
+  createUser: async (user: IUserRegister) => {
     try {
       const newUser = new User(user);
       await newUser.save();
@@ -26,7 +26,7 @@ const UserRepository = {
       console.log(`Repository Error: ${error}`);
     }
   },
-  updateUser: async (id: string, user: IUser) => {
+  updateUser: async (id: string, user: IUserRegister) => {
     try {
       const updated = await User.findByIdAndUpdate(id, user);
       return updated;

@@ -1,6 +1,5 @@
 import UserRepository from "../repositories/user.repository";
-import { IUser } from "../entities/user.entity";
-import { userValidationSchema } from "../utils/zod/user.zod";
+import { IUserRegister } from "../models/entities/user.entity";
 
 const UserService = {
   getAllUsers: async () => {
@@ -11,32 +10,23 @@ const UserService = {
       console.log(`Service [getAllUsers] Error: ${error}`);
     }
   },
-  getUser: async (id: string) => {
+  getUser: async (email: string) => {
     try {
-      const user = await UserRepository.getUser(id);
+      const user = await UserRepository.getUser(email);
       return user;
     } catch (error) {
       console.log(`Service [getUser] Error: ${error}`);
     }
   },
-  createUser: async (user: IUser) => {
+  createUser: async (user: IUserRegister) => {
     try {
-      // inputValidation
-      const result = userValidationSchema.safeParse(user);
-      if (!result.success) {
-        // just return the issues
-        // detailed message will be mapped in controllers
-        return result.error.issues.map((e) => e.message);
-      }
-
       const newUser = await UserRepository.createUser(user);
-
       return newUser;
     } catch (error) {
       console.log(`Service [createUser] Error: ${error}`);
     }
   },
-  updateUser: async (id: string, user: IUser) => {
+  updateUser: async (id: string, user: IUserRegister) => {
     try {
       const updated = await UserRepository.updateUser(id, user);
       return updated;
