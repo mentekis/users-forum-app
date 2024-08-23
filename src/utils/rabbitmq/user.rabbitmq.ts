@@ -1,6 +1,5 @@
 import amqplib from "amqplib";
 import { env } from "../envalid/env";
-import { IUser } from "../../entities/user.entity";
 
 // Connection
 async function rabbitConnect(queue: string) {
@@ -17,11 +16,14 @@ async function rabbitConnect(queue: string) {
 
 // Producer
 // 1. in handleCreateUser Controller
-async function newUserCreated(data: IUser) {
+async function newUserCreated(name: string, email: string) {
   try {
     const channel = await rabbitConnect(env.QUEUE_NEW_USER);
-    channel.sendToQueue(env.QUEUE_NEW_USER, Buffer.from(JSON.stringify(data)));
-    console.log("New user sent to RabbitMQ: ", JSON.stringify(data));
+    channel.sendToQueue(
+      env.QUEUE_NEW_USER,
+      Buffer.from(JSON.stringify({ name, email })),
+    );
+    console.log("New user sent to RabbitMQ: ", JSON.stringify({ name, email }));
   } catch (error) {
     console.log("RabbitMQ [newUserCreated] error:", error);
     // handle error, retry or dead-letter

@@ -17,6 +17,13 @@ const AuthRepository = {
       console.log(`getAuth Repository Error: ${error}`);
     }
   },
+  deleteAuth: async (refreshToken: string) => {
+    try {
+      await UserAuth.findOneAndDelete({ refreshToken });
+    } catch (error) {
+      console.log(`deleteAuth Repository Error: ${error}`);
+    }
+  },
 };
 
 export default AuthRepository;
