@@ -4,7 +4,7 @@ import {
   loginValidationSchema,
 } from "../utils/zod/user.zod";
 import UserService from "./user.service";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import { env } from "../utils/envalid/env";
 import jwt from "jsonwebtoken";
 import AuthRepository from "../repositories/auth.repository";
@@ -36,7 +36,7 @@ const AuthService = {
       }
 
       // password hashing
-      const hashedPassword = await bcrypt.hash(user.password, 13);
+      const hashedPassword = await bcryptjs.hash(user.password, 13);
 
       // save to db
       const newUser = await UserService.createUser({
@@ -66,7 +66,7 @@ const AuthService = {
       }
 
       // password match
-      const isPasswordMatch = bcrypt.compare(
+      const isPasswordMatch = bcryptjs.compareSync(
         user.password,
         checkUser.password as string,
       );
