@@ -7,15 +7,15 @@ const UserRepository = {
       const users = await User.find();
       return users;
     } catch (error) {
-      console.log(`Repository Error: ${error}`);
+      console.log(`getAllUsersRepository Error: ${error}`);
     }
   },
-  getUser: async (id: string) => {
+  getUser: async (email: string) => {
     try {
-      const user = await User.findById(id);
+      const user = await User.findOne({ email });
       return user;
     } catch (error) {
-      console.log(`Repository Error: ${error}`);
+      console.log(`getUserRepository Error: ${error}`);
     }
   },
   createUser: async (user: IUserRegister) => {
@@ -23,7 +23,7 @@ const UserRepository = {
       const newUser = new User(user);
       await newUser.save();
     } catch (error) {
-      console.log(`Repository Error: ${error}`);
+      console.log(`createUserRepository Error: ${error}`);
     }
   },
   updateUser: async (id: string, user: IUserRegister) => {
@@ -31,14 +31,14 @@ const UserRepository = {
       const updated = await User.findByIdAndUpdate(id, user);
       return updated;
     } catch (error) {
-      console.log(`Repository Error: ${error}`);
+      console.log(`updateUserRepository Error: ${error}`);
     }
   },
   deleteUser: async (id: string) => {
     try {
       await User.findByIdAndDelete(id);
     } catch (error) {
-      console.log(`Repository Error: ${error}`);
+      console.log(`deleteUserRepository Error: ${error}`);
     }
   },
 };
