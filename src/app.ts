@@ -4,7 +4,7 @@ import { userRouter } from "./routes/user.route";
 import { connectDb } from "./utils/db-connect/db.connect";
 import { newUserSuggestion } from "./utils/rabbitmq/user.rabbitmq";
 
-export const app = express();
+const app = express();
 connectDb();
 
 app.use(express.json());

@@ -7,7 +7,7 @@ const AuthController = {
     const { name, email, password } = req.body;
     const result = await AuthService.userRegister({ name, email, password });
     if (typeof result === "object") {
-      return res.status(400).json({ message: result });
+      return res.status(403).json({ message: result });
     }
 
     // sendToQueue
