@@ -25,7 +25,7 @@ async function newUserCreated(name: string, email: string) {
     );
     console.log("New user sent to RabbitMQ: ", JSON.stringify({ name, email }));
   } catch (error) {
-    console.log("RabbitMQ [newUserCreated] error:", error);
+    console.log("newUserCreated RabbitMQ error:", error);
     // handle error, retry or dead-letter
   }
 }
@@ -37,22 +37,22 @@ async function sendUserData(id: string) {
 }
 
 // Consumer
-async function newUserSuggestion() {
+async function newDataSuggestion(queue: string, title: string) {
   try {
-    const channel = await rabbitConnect(env.QUEUE_NEW_USER);
+    const channel = await rabbitConnect(queue);
     await channel.consume(
-      env.QUEUE_NEW_USER,
+      queue,
       (msg) => {
         if (msg !== null) {
-          console.log("New user data received: ", msg.content.toString());
+          console.log(`New ${title} received: ${msg.content.toString()}`);
           channel.ack(msg);
         }
       },
       { noAck: false },
     );
   } catch (error) {
-    console.log("RabbitMQ [user consume] error:", error);
+    console.log("newSuggestion RabbitMQ error:", error);
   }
 }
 
-export { rabbitConnect, newUserCreated, sendUserData, newUserSuggestion };
+export { rabbitConnect, newUserCreated, sendUserData, newDataSuggestion };
