@@ -1,7 +1,9 @@
 # Users service
 
 A part of Forum App microservices
+
 ### Features
+
 - User input validation by [ZOD](https://zod.dev/)
 - User Authentication by [Bcrypt](https://www.npmjs.com/package/bcrypt)
 - User Authorization Token rotation by [JWT](https://jwt.io/)
@@ -19,3 +21,5 @@ A part of Forum App microservices
 ### Consumer queue:
 
 - `"newUserCreated"`
+- `"newThreadCreated"`
+- `"newReplyCreated"`
