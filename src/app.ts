@@ -9,8 +9,8 @@ const app = express();
 connectDb();
 
 app.use(express.json());
-app.use("/api/v1/users", userRouter);
 app.use(cors({ origin: `http://${env.HOST}:3000` }));
+app.use("/api/v1/users", userRouter);
 
 // Queue Listener
 newDataSuggestion(env.QUEUE_NEW_USER, "User");
