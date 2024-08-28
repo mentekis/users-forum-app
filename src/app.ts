@@ -9,7 +9,7 @@ const app = express();
 connectDb();
 
 app.use(express.json());
-app.use(cors({ origin: `http://${env.HOST}:3000` }));
+app.use(cors({ origin: "http://localhost:5173/" }));
 app.use("/api/v1/users", userRouter);
 
 // Queue Listener
