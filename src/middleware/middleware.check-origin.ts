@@ -8,8 +8,8 @@ export async function middlewareCheckOrigin(
 ) {
   const origin = req.headers.host;
 
-  if (origin === `${env.HOST}:3000`) {
-    return next();
+  if (origin !== `${env.HOST}:3000`) {
+    return res.status(403).json({ message: "You are not allowed", origin });
   }
-  res.status(403).json({ message: "You are not allowed", origin });
+  next();
 }
