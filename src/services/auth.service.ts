@@ -18,6 +18,14 @@ const AuthService = {
       console.log(`createAuthService Error: ${error}`);
     }
   },
+  getAuth: async (userId: string) => {
+    try {
+      const auth = await AuthRepository.getAuth(userId);
+      return auth;
+    } catch (error) {
+      console.log(`getAuthService Error: ${error}`);
+    }
+  },
   userRegister: async (user: IUserRegister) => {
     try {
       // validation

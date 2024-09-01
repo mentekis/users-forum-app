@@ -6,9 +6,12 @@ import { middlewareCheckOrigin } from "../middleware/middleware.check-origin";
 export const userRouter = express.Router();
 userRouter.use(middlewareCheckOrigin);
 
+// User
 userRouter.get("/", UserController.handleGetAllUsers);
+userRouter.patch("/:id", UserController.handleUpdateUser);
+userRouter.delete("/:id", UserController.handleDeleteUser);
+// Auth
+userRouter.get("/auth", AuthController.handleCheckAuth);
 userRouter.post("/", AuthController.handleRegister);
 userRouter.post("/login", AuthController.handleLogin);
 userRouter.post("/logout", AuthController.handleLogout);
-userRouter.patch("/:id", UserController.handleUpdateUser);
-userRouter.delete("/:id", UserController.handleDeleteUser);

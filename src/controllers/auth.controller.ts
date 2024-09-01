@@ -3,6 +3,13 @@ import AuthService from "../services/auth.service";
 import { newUserCreated } from "../utils/rabbitmq/user.rabbitmq";
 
 const AuthController = {
+  handleCheckAuth: async (req: Request, res: Response) => {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    return res.status(200).json({ userId });
+  },
   handleRegister: async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
     const result = await AuthService.userRegister({ name, email, password });
