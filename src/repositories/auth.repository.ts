@@ -9,9 +9,9 @@ const AuthRepository = {
       console.log(`createAuth Repository Error: ${error}`);
     }
   },
-  getAuth: async (userId: string) => {
+  getAuth: async (refreshToken: string) => {
     try {
-      const auth = await UserAuth.findOne({ userId });
+      const auth = await UserAuth.findOne({ refreshToken });
       return auth;
     } catch (error) {
       console.log(`getAuth Repository Error: ${error}`);
