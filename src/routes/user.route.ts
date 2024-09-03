@@ -11,7 +11,7 @@ userRouter.get("/", UserController.handleGetAllUsers);
 userRouter.patch("/:id", UserController.handleUpdateUser);
 userRouter.delete("/:id", UserController.handleDeleteUser);
 // Auth
-userRouter.get("/auth", AuthController.handleCheckAuth);
+userRouter.post("/auth", AuthController.handleCheckAuth);
 userRouter.post("/", AuthController.handleRegister);
 userRouter.post("/login", AuthController.handleLogin);
 userRouter.post("/logout", AuthController.handleLogout);
