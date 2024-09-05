@@ -18,6 +18,42 @@ const AuthService = {
       console.log(`createAuthService Error: ${error}`);
     }
   },
+  getAuth: async (refreshToken: string) => {
+    try {
+      const auth = await AuthRepository.getAuth(refreshToken);
+      return auth;
+    } catch (error) {
+      console.log(`getAuthService Error: ${error}`);
+    }
+  },
+  checkAuth: async (refreshToken: string) => {
+    try {
+      const auth = await AuthRepository.getAuth(refreshToken);
+      if (auth === undefined) {
+        return { message: "Unauthorized! Session expired" };
+      }
+      jwt.verify(refreshToken, env.JWT_REFRESH_KEY as string);
+
+      // generate new AT
+      const payload = jwt.decode(refreshToken) as {
+        id: string;
+        name: string;
+        email: string;
+      };
+      const newAccessToken = jwt.sign(
+        {
+          id: payload.id,
+          name: payload.name,
+          email: payload.email,
+        },
+        env.JWT_ACCESS_KEY,
+        { expiresIn: "15m" },
+      );
+      return { newAccessToken };
+    } catch (error) {
+      console.log(`checkAuthService Error: ${error}`);
+    }
+  },
   userRegister: async (user: IUserRegister) => {
     try {
       // validation
@@ -90,7 +126,7 @@ const AuthService = {
       // save to authDb
       const userId = checkUser._id.toString();
       await AuthService.createAuth(userId, refreshToken);
-      return { accessToken, refreshToken };
+      return { userId, accessToken, refreshToken };
     } catch (error) {
       console.log(`userLoginService Error: ${error}`);
     }
