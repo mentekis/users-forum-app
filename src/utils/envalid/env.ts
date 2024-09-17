@@ -9,8 +9,7 @@ export const env = cleanEnv(process.env, {
   JWT_ACCESS_KEY: str(),
   JWT_REFRESH_KEY: str(),
   RABBITMQ_URI: str(),
-  QUEUE_NEW_USER: str(),
-  QUEUE_NEW_THREAD: str(),
   QUEUE_NEW_REPLY: str(),
-  QUEUE_GET_USER: str(),
+  QUEUE_UPDATE_USER: str(),
+  QUEUE_ENRICH_USER: str(),
 });

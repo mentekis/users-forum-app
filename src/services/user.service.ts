@@ -13,7 +13,7 @@ const UserService = {
   getUserById: async (id: string) => {
     try {
       const user = await UserRepository.getUser(id);
-      return user;
+      return user?.name;
     } catch (error) {
       console.log(`Service [getUser] Error: ${error}`);
     }

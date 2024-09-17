@@ -22,9 +22,6 @@ const AuthController = {
       return res.status(403).json({ message: result });
     }
 
-    // sendToQueue
-    newUserCreated(name, email);
-
     return res
       .status(201)
       .json({ message: "User created", data: { name, email } });

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../services/user.service";
-import { sendUserData } from "../utils/rabbitmq/user.rabbitmq";
+import { eventProducer } from "../utils/rabbitmq/user.rabbitmq";
+import { env } from "../utils/envalid/env";
 
 const UserController = {
   // Get all users
@@ -28,7 +29,7 @@ const UserController = {
     await UserService.updateUser(userId, { name, email, password });
 
     // sendToQueue
-    sendUserData(userId, name);
+    eventProducer(env.QUEUE_UPDATE_USER, userId, name);
 
     return res
       .status(200)
