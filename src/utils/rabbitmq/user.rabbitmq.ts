@@ -1,5 +1,6 @@
 import amqplib from "amqplib";
 import { env } from "../envalid/env";
+import UserService from "../../services/user.service";
 
 // Connection
 async function rabbitConnect(queue: string) {
@@ -14,38 +15,34 @@ async function rabbitConnect(queue: string) {
   }
 }
 
-// Producer
-// 1. in handleCreateUser Controller
-async function newUserCreated(name: string, email: string) {
-  try {
-    const channel = await rabbitConnect(env.QUEUE_NEW_USER);
-    channel.sendToQueue(
-      env.QUEUE_NEW_USER,
-      Buffer.from(JSON.stringify({ name, email })),
-    );
-    console.log("New user sent to RabbitMQ: ", JSON.stringify({ name, email }));
-  } catch (error) {
-    console.log("newUserCreated RabbitMQ error:", error);
-    // handle error, retry or dead-letter
-  }
+// Producer handle one event only (updateUser)
+async function eventProducer(queue: string, id: string, name: string) {
+  const channel = await rabbitConnect(queue);
+  channel.sendToQueue(queue, Buffer.from(JSON.stringify({ id, name })), {
+    persistent: true,
+  });
 }
 
-// 2. in handleGetUser Controller
-async function sendUserData(id: string) {
-  const channel = await rabbitConnect(env.QUEUE_GET_USER);
-  channel.sendToQueue(env.QUEUE_GET_USER as string, Buffer.from(id));
-}
-
-// Consumer
-async function newDataSuggestion(queue: string, title: string) {
+// Consumer handle one event only (newUserNotifData)
+// handle 2 event if queue is newUserNotifData
+async function eventConsumer(queue: string) {
   try {
     const channel = await rabbitConnect(queue);
     await channel.consume(
       queue,
-      (msg) => {
+      async (msg) => {
         if (msg !== null) {
-          console.log(`New ${title} received: ${msg.content.toString()}`);
+          console.log(`New data received: ${msg.content.toString()}`);
           channel.ack(msg);
+          if (queue === env.QUEUE_NEW_REPLY) {
+            const { threadId, userId } = JSON.parse(msg.content.toString());
+            console.log({ threadId, userId });
+            const name = await UserService.getUserById(userId);
+            channel.sendToQueue(
+              env.QUEUE_ENRICH_USER,
+              Buffer.from(JSON.stringify({ userId, name })),
+            );
+          }
         }
       },
       { noAck: false },
@@ -55,4 +52,4 @@ async function newDataSuggestion(queue: string, title: string) {
   }
 }
 
-export { rabbitConnect, newUserCreated, sendUserData, newDataSuggestion };
+export { rabbitConnect, eventProducer, eventConsumer };

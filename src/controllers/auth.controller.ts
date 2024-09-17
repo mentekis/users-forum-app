@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import AuthService from "../services/auth.service";
-import { newUserCreated } from "../utils/rabbitmq/user.rabbitmq";
 
 const AuthController = {
   handleCheckAuth: async (req: Request, res: Response) => {
@@ -21,9 +20,6 @@ const AuthController = {
     if (typeof result === "object") {
       return res.status(403).json({ message: result });
     }
-
-    // sendToQueue
-    newUserCreated(name, email);
 
     return res
       .status(201)

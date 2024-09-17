@@ -63,7 +63,7 @@ const AuthService = {
       }
 
       // collision check
-      const isUserExist = await UserService.getUser(user.email);
+      const isUserExist = await UserService.getUserByEmail(user.email);
       if (isUserExist) {
         return {
           message:
@@ -93,7 +93,7 @@ const AuthService = {
       }
 
       // check record
-      const checkUser = await UserService.getUser(user.email);
+      const checkUser = await UserService.getUserByEmail(user.email);
       if (!checkUser) {
         return {
           message:

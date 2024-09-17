@@ -1,0 +1,41 @@
+name: CI/CD Pipeline Backend Api-gateway ForumApp
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Logging
+        run: echo "Start CI/CD Pipeline Backend Users Service ForumApp"
+
+      - name: Checkout Main branch
+        uses: actions/checkout@v3
+
+      - name: Setup Nodejs
+        run: |
+          npm install -g pnpm@latest
+          pnpm install
+
+      - name: Check code linting
+        run: pnpm lint:run
+
+      - name: Setup SSH to Server
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.DITS_SSH_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DITS_USERS_IP }} >> ~/.ssh/known_hosts
+
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh ${{ secrets.DITS_SERVER_USERNAME }}@${{ secrets.DITS_USERS_IP_IP }} << 'EOF'
+          cd app/user-forum-app && \
+          docker-compose up -d
+          EOF

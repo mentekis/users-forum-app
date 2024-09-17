@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import UserService from "../services/user.service";
+import { eventProducer } from "../utils/rabbitmq/user.rabbitmq";
+import { env } from "../utils/envalid/env";
 
 const UserController = {
   // Get all users
@@ -10,7 +12,7 @@ const UserController = {
 
   handleGetUser: async (req: Request, res: Response) => {
     const id = req.params.id;
-    const user = await UserService.getUser(id);
+    const user = await UserService.getUserById(id);
     return res.status(200).json({ message: "User found", data: user });
   },
 
@@ -25,6 +27,9 @@ const UserController = {
       return res.status(401).json({ message: "Unauthorized. Invalid token" });
     }
     await UserService.updateUser(userId, { name, email, password });
+
+    // sendToQueue
+    eventProducer(env.QUEUE_UPDATE_USER, userId, name);
 
     return res
       .status(200)
