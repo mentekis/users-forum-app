@@ -10,7 +10,15 @@ const UserService = {
       console.log(`Service [getAllUsers] Error: ${error}`);
     }
   },
-  getUser: async (email: string) => {
+  getUserById: async (id: string) => {
+    try {
+      const user = await UserRepository.getUser(id);
+      return user;
+    } catch (error) {
+      console.log(`Service [getUser] Error: ${error}`);
+    }
+  },
+  getUserByEmail: async (email: string) => {
     try {
       const user = await UserRepository.getUser(email);
       return user;

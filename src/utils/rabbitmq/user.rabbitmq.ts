@@ -31,9 +31,13 @@ async function newUserCreated(name: string, email: string) {
 }
 
 // 2. in handleGetUser Controller
-async function sendUserData(id: string) {
+async function sendUserData(id: string, name: string) {
   const channel = await rabbitConnect(env.QUEUE_GET_USER);
-  channel.sendToQueue(env.QUEUE_GET_USER as string, Buffer.from(id));
+  channel.sendToQueue(
+    env.QUEUE_GET_USER as string,
+    Buffer.from(JSON.stringify({ id, name })),
+    { persistent: true },
+  );
 }
 
 // Consumer
