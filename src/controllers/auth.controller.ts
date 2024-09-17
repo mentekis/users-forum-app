@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import AuthService from "../services/auth.service";
-import { newUserCreated } from "../utils/rabbitmq/user.rabbitmq";
 
 const AuthController = {
   handleCheckAuth: async (req: Request, res: Response) => {
