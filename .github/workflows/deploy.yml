@@ -35,7 +35,7 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh ${{ secrets.DITS_SERVER_USERNAME }}@${{ secrets.DITS_USERS_IP }} << 'EOF'
+          ssh -t ${{ secrets.DITS_SERVER_USERNAME }}@${{ secrets.DITS_USERS_IP }} << 'EOF'
           cd app/user-forum-app && \
           docker-compose up -d
           EOF
